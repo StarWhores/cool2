@@ -1,0 +1,99 @@
+pragma solidity ^0.6.0;
+
+// Import the SafeMath library
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+
+// GPT INU token contract
+
+contract GPTINU {
+    // The address of the contract owner
+    address public owner;
+    // The address of the liquidity wallet
+    address public liquidityWallet = 0xliquiditywallet;
+    
+    // The address of the marketing wallet
+    address public marketingWallet = 0xmarketingwallet;
+    // The address of the developer wallet
+    address public developerWallet = 0xdeveloperwallet;
+    // The address of the burn wallet
+    address public burnWallet = 0xburn;
+
+    // The total supply of GPT INU tokens
+    uint256 public totalSupply = 1e12;
+    // The name of the token
+    string public name = "GPT INU";
+    // The ticker symbol of the token
+    string public symbol = "GPTINU";
+    // The number of decimal places of the token (similar to the smallest unit of a currency)
+    uint8 public decimals = 18;
+
+    // Mapping from addresses to balances
+    mapping(address => uint256) public balances;
+
+    // Events
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Burn(address indexed burner, uint256 value);
+
+    // Use the SafeMath library for all arithmetic operations
+    using SafeMath for uint256;
+
+    // Constructor function
+    constructor() public {
+        // Set the initial balance of the contract to the total supply
+        balances[address(this)] = totalSupply;
+        owner = msg.sender;
+    }
+
+    // Function to transfer tokens from one address to another
+    function transfer(address to, uint256 value) public {
+        // Ensure that the sender has sufficient balance
+        require(balances[msg.sender] >= value, "Insufficient balance");
+
+        // Deduct the amount from the sender's balance and add it to the recipient's balance
+        balances[msg.sender] -= value;
+        balances[to] += value;
+
+        // Collect taxes on the trade
+        collectTaxes(value);
+
+        // Emit the transfer event
+        emit Transfer(msg.sender, to, value);
+    }
+
+    // Function to burn (destroy) tokens
+    function burn(uint256 value) public {
+        // Ensure that the sender has sufficient balance
+        require(balances[msg.sender] >= value, "Insufficient balance");
+
+        // Deduct the amount from the sender's balance and add it to the burn wallet's balance
+        balances[msg.sender] -= value;
+        burnWallet.transfer(value);
+
+        // Emit the burn event
+        emit Burn(msg.sender, value);
+    }
+
+    // Function to calculate and collect taxes on a trade
+    // This function can only be called by the owner of the contract
+    function collectTaxes(uint256 value) public {
+        // Calculate the tax amount
+        uint256 taxAmount = value.mul(9).div(100);
+
+        // Split the tax amount among the marketing, developer, and liquidity wallets
+        uint256 marketingTax = taxAmount.mul(3).div(100);
+        uint256 developerTax = taxAmount.mul(1).div(100);
+        uint256 liquidityTax = taxAmount.mul(5).div(100);
+
+        // Transfer the taxes to the respective wallets
+        marketingWallet.transfer(marketingTax);
+        developerWallet.transfer(developerTax);
+        liquidityWallet.transfer(liquidityTax);
+    }
+    // Modifier to only allow the contract owner to call a function
+        modifier ownerOnly {
+        // If the caller is not the contract owner, revert the transaction
+        require(msg.sender == owner, "Only the contract owner can call this function");
+
+        // If the caller is the contract owner, allow the function to continue
+        _;
+    }
