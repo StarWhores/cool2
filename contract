@@ -11,14 +11,15 @@ contract GPTINU {
     // The address of the contract owner
     address public owner;
     // The address of the liquidity wallet
-    address public liquidityWallet = 0xliquiditywallet;
+    address payable public liquidityWallet = 0xe5be5Cc14d06781b1F109bDef573124e0EE7Cc9a;
     
     // The address of the marketing wallet
-    address public marketingWallet = 0xmarketingwallet;
+    address payable public marketingWallet = 0x2BB6ca7F8ea456F97292C4Aa1cdBADBE53C55E3c;
+
     // The address of the developer wallet
-    address public developerWallet = 0xdeveloperwallet;
+    address payable public developerWallet = 0xF56a7b51BC47D65Fc2754A9Efea70C0fD8D5a248;
     // The address of the burn wallet
-    address public burnWallet = 0xburn;
+    address payable public burnWallet = 0x000000000000000000000000000000000000dEaD;
 
     // The total supply of GPT INU tokens
     uint256 public totalSupply = 1e12;
@@ -108,3 +109,4 @@ contract GPTINU {
         // If the caller is the contract owner, allow the function to continue
         _;
     }
+}
