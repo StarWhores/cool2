@@ -1,7 +1,7 @@
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 // Import the SafeMath library
-import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol";
 
 // GPT INU token contract
 
