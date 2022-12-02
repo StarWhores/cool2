@@ -60,6 +60,15 @@ contract GPTINU {
         emit Transfer(msg.sender, to, value);
     }
 
+    // Function to transfer contract ownership to another address
+    function transferOwnership(address newOwner) public {
+        // Ensure that only the current owner can transfer ownership
+        require(msg.sender == owner, "Only the current owner can transfer ownership");
+
+        // Transfer ownership to the new owner
+        owner = newOwner;
+    }
+    
     // Function to burn (destroy) tokens
     function burn(uint256 value) public {
         // Ensure that the sender has sufficient balance
